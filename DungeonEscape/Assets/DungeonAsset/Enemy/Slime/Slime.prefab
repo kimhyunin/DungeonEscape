@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4504035235806246610}
   - component: {fileID: 6723828203424327321}
   - component: {fileID: 871541145228900500}
-  m_Layer: 0
+  m_Layer: 30
   m_Name: Slime
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &4504035235806246610
 MonoBehaviour:
   m_ObjectHideFlags: 0

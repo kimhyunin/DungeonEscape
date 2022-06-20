@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Arrow
   layers:
   - Default
   - TransparentFX
@@ -16,6 +17,8 @@ TagManager:
   - 
   - Platform
   - 
+  - Player
+  - PlayerDamaged
   - 
   - 
   - 
@@ -34,9 +37,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
+  - Enemy
   - BackGround
   m_SortingLayers:
   - name: Default

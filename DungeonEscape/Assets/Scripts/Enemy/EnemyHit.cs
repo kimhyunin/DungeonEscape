@@ -21,16 +21,17 @@ public class EnemyHit : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Arrow"){            
+        if(collision.gameObject.tag == "Arrow"){
             animator.SetBool("IsHit", true);
-            OnDamaged();            
-        } 
+            OnDamaged();
+        }
     }
     public void OnDamaged()
-    {   
+    {
+        DataManager.GetInstance().stagePoint += 10;
         //Sprite Flip Y
-        spriteRenderer.flipY = true;        
-        //Colider Disable        
+        spriteRenderer.flipY = true;
+        //Colider Disable
         boxCollider2D.enabled = false;
         //Die Effect Jump
         rigid.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
@@ -40,11 +41,4 @@ public class EnemyHit : MonoBehaviour
     void EnemyDestory(){
         Destroy(gameObject);
     }
-
-
-    
-    
-    
-    
-    
 }

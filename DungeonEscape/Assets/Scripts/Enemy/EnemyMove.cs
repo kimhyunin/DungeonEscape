@@ -20,21 +20,22 @@ public class EnemyMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch(this.name){
-            case "Slime":
-            SlimeMove();
-            break;
-            
-            case "Bat":
-            BatMove();
-            break;
+        if(DataManager.GetInstance().isStart){
+            switch(this.name){
+                case "Slime":
+                SlimeMove();
+                break;
 
-            case "PatrolGuy":
-            SlimeMove();
-            break;
-        }    
+                case "Bat":
+                BatMove();
+                break;
+
+                case "PatrolGuy":
+                SlimeMove();
+                break;
+            }
+        }
     }
-    
 
     void SlimeMove(){
         Move();
@@ -49,7 +50,7 @@ public class EnemyMove : MonoBehaviour
     void Move(){
         rigid.velocity = new Vector2(nextMove,rigid.velocity.y);
         Vector2 frontVec = new Vector2(rigid.position.x + nextMove * 0.3f, rigid.position.y);
-        
+
         Debug.DrawRay(frontVec, Vector3.down, new Color(0, 1, 0));
         RaycastHit2D rayHit = Physics2D.Raycast(frontVec, Vector3.down, 1, LayerMask.GetMask("Platform"));
         if(rayHit.collider == null)
@@ -68,9 +69,9 @@ public class EnemyMove : MonoBehaviour
     void Think()
     {
         // Set Next Active
-        nextMove = Random.Range(-1, 2);        
+        nextMove = Random.Range(-1, 2);
         // Flip Sprite
-        if(nextMove != 0) 
+        if(nextMove != 0)
             spriteRenderer.flipX = nextMove == 1;
         //Recursive
         float nextThinkTime = Random.Range(2f, 5f);

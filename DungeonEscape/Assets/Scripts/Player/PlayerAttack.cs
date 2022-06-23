@@ -19,7 +19,8 @@ public class PlayerAttack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Attack();
+        if(DataManager.GetInstance().isStart && !DataManager.GetInstance().isPause)
+            Attack();
     }
 
     void Attack(){

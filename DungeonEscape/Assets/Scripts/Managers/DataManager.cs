@@ -27,6 +27,7 @@ public class DataManager : MonoBehaviour
     public TextMeshProUGUI UIPoint;
     public bool playerisDie {get; set;}
     public bool isPause {get; set;}
+    public bool isStart {get; set;}
 
     public void Awake(){
         instance = this;
@@ -41,6 +42,7 @@ public class DataManager : MonoBehaviour
     {
         // 포인트 업데이트
         UIPoint.text = (totalPoint + stagePoint).ToString();
+        Debug.Log(Data.GetInstance().isStart);
     }
 
     public void HealthDown(){
@@ -48,8 +50,6 @@ public class DataManager : MonoBehaviour
         UIhealth[health].sprite = whiteHealth; // UISprite 바꾸기
         if(health == 0){
             playerisDie = true;
-
         }
     }
-
 }

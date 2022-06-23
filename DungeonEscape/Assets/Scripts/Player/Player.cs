@@ -22,22 +22,26 @@ public class Player : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         keyBoardManager = GetComponent<KeyBoardManager>();
         capsuleColider = GetComponent<CapsuleCollider2D>();
-
     }
 
     void Update()
     {
-        PlayerJump();
-        PlayerRunAnimation();
-        PlayerFlipX();
         if(DataManager.GetInstance().playerisDie){
             OnDie();
+        } else {
+            if(DataManager.GetInstance().isStart && !DataManager.GetInstance().isPause){
+                PlayerJump();
+                PlayerRunAnimation();
+                PlayerFlipX();
+            }
         }
     }
 
     void FixedUpdate()
     {
-        Move();
+        if(DataManager.GetInstance().isStart && !DataManager.GetInstance().isPause){
+            Move();
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -58,7 +62,6 @@ public class Player : MonoBehaviour
 
     void PlayerJump(){
         // 점프
-        Debug.Log(keyBoardManager.b_value);
         if((Input.GetButtonDown("Jump") || keyBoardManager.b_value == 1) && !animator.GetBool("IsJump")){
             rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
             animator.SetBool("IsJump", true);
@@ -89,6 +92,7 @@ public class Player : MonoBehaviour
     }
 
     void Move(){
+        // 플레이어 이동
         float h = Input.GetAxisRaw("Horizontal")+ keyBoardManager.right_value + keyBoardManager.left_value;
         rigid.velocity = new Vector2(maxSpeed * h, rigid.velocity.y);
 
@@ -102,6 +106,7 @@ public class Player : MonoBehaviour
                 }
             }
         }
+    
     }
 
     void OnDamaged(Vector2 targetPos)

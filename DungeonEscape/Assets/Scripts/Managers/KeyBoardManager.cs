@@ -6,6 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class KeyBoardManager : MonoBehaviour
 {
+    public GameObject pauseUI;
+    public GameObject mainUI;
+    public GameObject quitMessageUI;
+    private bool menuOn = false;
+    private bool pauseOn = false;
+
     // Mobile Key Var
     [HideInInspector]
     public int up_value { get; set; }
@@ -105,26 +111,54 @@ public class KeyBoardManager : MonoBehaviour
         }
     }
 
-    public GameObject quitAnswer;
     public void onClickMenu()
     {
-        // if (DataManager.GetInstance().isStart)
-        // {
-        //     Time.timeScale = 0;
-        //     quitAnswer.SetActive(true);
-        // }
+        if(DataManager.GetInstance().isStart){
+            if(pauseOn){
+                pauseUI.SetActive(false);
+            }
+            menuOn = true;
+            pause(true);
+            quitMessageUI.SetActive(true);
+        }
     }
 
     public void onClickQuitYes()
     {
-        // Time.timeScale = 1;
-        // SceneManager.LoadScene(0);
+        pause(false);
+        SceneManager.LoadScene(0);
+        pauseOn = false;
+        menuOn = false;
         // DataManager.GetInstance().isStart = false;
     }
 
     public void onClickQuitNo()
     {
-        Time.timeScale = 1;
-        quitAnswer.SetActive(false);
+        pause(false);
+        quitMessageUI.SetActive(false);
+        pauseOn = false;
+        menuOn = false;
+    }
+
+    public void OnClickStart(){
+        if(DataManager.GetInstance().isStart){ // 게임 시작이 되지 않았을 경우 일시정지
+            if(!menuOn){
+                Time.timeScale = !DataManager.GetInstance().isPause ? 0: 1;
+                pauseUI.SetActive(!DataManager.GetInstance().isPause);
+                DataManager.GetInstance().isPause = !DataManager.GetInstance().isPause;
+                pauseOn = !pauseOn;
+            }
+        } else { // 게임스타트
+            mainUI.SetActive(false);
+            DataManager.GetInstance().isStart = true;
+        }
+    }
+
+    private void pause(bool value){
+        Time.timeScale = value ? 0 : 1;
+        DataManager.GetInstance().isPause = value? true : false;
+    }
+    private void OnPause(){
+        pause(true);
     }
 }

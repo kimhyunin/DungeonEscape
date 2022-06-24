@@ -2,17 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LadderMove2 : MonoBehaviour
+public class LadderMove : MonoBehaviour
 {
-    [Header("Ladder")]
     public float climbSpeed = 3;
     public LayerMask ladderMask;
-    public LayerMask groundLayer;
     public float vertical;
     public bool climbing;
     public float checkRadius = 0.3f;
-    public bool jumpPressed;
-    private bool clearInputs;
     private Rigidbody2D rigid;
     private Animator animator;
     private Collider2D collider2;

@@ -6,13 +6,24 @@ public class Player : MonoBehaviour
 {
     public float maxSpeed;
     public float jumpPower;
+    public bool isJumping = false;
+    private bool knockBack = false;
+    public bool isGround;
+    [SerializeField]
+    Transform pos;
+
+    [SerializeField]
+    float checkRadius;
+
+    [SerializeField]
+    LayerMask islayer;
 
     Rigidbody2D rigid;
     Animator animator;
     SpriteRenderer spriteRenderer;
     KeyBoardManager keyBoardManager;
     CapsuleCollider2D capsuleColider;
-
+   
 
 
     void Awake()
@@ -30,9 +41,11 @@ public class Player : MonoBehaviour
             OnDie();
         } else {
             if(DataManager.GetInstance().isStart && !DataManager.GetInstance().isPause){
-                PlayerJump();
-                PlayerRunAnimation();
-                PlayerFlipX();
+                if(!knockBack){
+                    PlayerJump();
+                    PlayerRunAnimation();
+                    PlayerFlipX();
+                }
             }
         }
     }
@@ -40,7 +53,9 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         if(DataManager.GetInstance().isStart && !DataManager.GetInstance().isPause){
-            Move();
+            if(!knockBack){
+                Move();
+            }
         }
     }
 
@@ -48,7 +63,6 @@ public class Player : MonoBehaviour
     {
         if(collision.gameObject.tag == "Enemy"){
             OnDamaged(collision.transform.position);
-            // animator.SetBool("IsDie", true);
         }
     }
     void OnTriggerEnter2D(Collider2D collision)
@@ -62,11 +76,32 @@ public class Player : MonoBehaviour
 
     void PlayerJump(){
         // 점프
+        isGround = Physics2D.OverlapCircle(pos.position, checkRadius,islayer);
         if((Input.GetButtonDown("Jump") || keyBoardManager.b_value == 1) && !animator.GetBool("IsJump")){
-            rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+            Debug.Log("JJJJJ");
+            rigid.velocity = Vector2.up * jumpPower;
+            //rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
             animator.SetBool("IsJump", true);
             animator.SetBool("IsFall", true);
+            isJumping = true;
+
         }
+        if(isGround){
+            animator.SetBool("IsJump",false);
+            animator.SetBool("IsFall",false);
+            isJumping = false;
+        }
+        // if(isGround){
+        //     RaycastHit2D rayhit = Physics2D.Raycast(rigid.position, Vector3.down, 1, LayerMask.GetMask("Platform"));
+        //     Debug.DrawRay(rigid.position, Vector3.down * 1, Color.red);
+        //     if(rayhit.collider !=null){
+        //         if(rayhit.distance < 0.7f){
+        //             animator.SetBool("IsJump",false);
+        //             animator.SetBool("IsFall",false);
+        //             isJumping = false;
+        //         }
+        //     }
+        // }
     }
 
     void PlayerRunAnimation(){
@@ -95,43 +130,37 @@ public class Player : MonoBehaviour
         // 플레이어 이동
         float h = Input.GetAxisRaw("Horizontal")+ keyBoardManager.right_value + keyBoardManager.left_value;
         rigid.velocity = new Vector2(maxSpeed * h, rigid.velocity.y);
-
-        if(rigid.velocity.y < -1.0f){
-            RaycastHit2D rayhit = Physics2D.Raycast(rigid.position, Vector3.down, 1, LayerMask.GetMask("Platform"));
-            Debug.DrawRay(rigid.position, Vector3.down * 1, Color.red);
-            if(rayhit.collider !=null){
-                if(rayhit.distance < 0.7f){
-                    animator.SetBool("IsJump",false);
-                    animator.SetBool("IsFall",false);
-                }
-            }
-        }
-    
     }
 
     void OnDamaged(Vector2 targetPos)
     {
+        knockBack = true; // 넉백 당함
+        isJumping = true; // 점프로 인식
+        gameObject.layer = 11; // PlayerDamaged
         // Health Down
         DataManager.GetInstance().HealthDown();
-
-        gameObject.layer = 11; // PlayerDamaged
         if(!DataManager.GetInstance().playerisDie){
             spriteRenderer.color = new Color(1, 1, 1, 0.4f);
         }
-
-        //TODO 넉백 수정 하기
         // Reaction Force
         int dirc = transform.position.x - targetPos.x > 0 ? 1 : -1;
-        rigid.AddForce(new Vector2(dirc, 1) * 4 , ForceMode2D.Impulse);
+        rigid.AddForce(new Vector2(dirc, 1) * 3 , ForceMode2D.Impulse);
+
+        // 넉백 딜레이
+        Invoke("SetKnockBack",0.5f);
         //Animation
-        Invoke("OffDamaged", 3);
+        Invoke("OffDamaged", 2);
 
     }
+    private void SetKnockBack(){
+        knockBack = false;
+    }
 
-    void OffDamaged()
+    private void OffDamaged()
     {
         gameObject.layer = 10; // Player
         spriteRenderer.color = new Color(1, 1, 1, 1);
+
     }
     void OnDie(){
         animator.SetTrigger("IsDie");

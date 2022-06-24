@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LadderMove : MonoBehaviour
 {
-    
+
     Rigidbody2D rigid;
     Animator animator;
     Player player;
@@ -12,7 +12,9 @@ public class LadderMove : MonoBehaviour
 
     public bool isLadder;
     public bool isClimbing;
-    private float playerMaxSpeed = 5f;
+    private float playerMaxSpeed = 2f;
+
+    public GameObject ladder;
 
     // Start is called before the first frame update
     void Start()
@@ -20,21 +22,15 @@ public class LadderMove : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         player = GetComponent<Player>();
-        // playerMaxSpeed = player.maxSpeed;
         keyBoardManager = GetComponent<KeyBoardManager>();
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 
     void FixedUpdate()
     {
-        if (isLadder)
+        if (isLadder&&!player.isJumping)
         {
             float ver = Input.GetAxis("Vertical"); // 초기화
+            Debug.Log(ver);
             if (keyBoardManager.up_value == 1)
             {
                 ver += keyBoardManager.up_value;
@@ -43,20 +39,20 @@ public class LadderMove : MonoBehaviour
             {
                 ver += keyBoardManager.down_value;
             }
-            rigid.gravityScale = 0f;
-            rigid.velocity = new Vector2(rigid.velocity.x, ver * playerMaxSpeed);
 
             if (Mathf.Abs(ver) > 0)
             {
+                rigid.gravityScale = 0f;
+                rigid.velocity = new Vector2(rigid.velocity.x, ver * playerMaxSpeed);
                 rigid.transform.position = new Vector2(Mathf.Floor(rigid.transform.position.x) + 0.5f, rigid.transform.position.y);
-                animator.SetBool("isClimb", true);
+                animator.SetBool("IsClimb", true);
                 isClimbing = true;
                 rigid.velocity = new Vector2(0, ver * playerMaxSpeed);
             }
         }
         if (!isLadder)
         {
-            animator.SetBool("isClimb", false);
+            animator.SetBool("IsClimb", false);
             rigid.gravityScale = 2f;
             isClimbing = false;
         }
@@ -68,7 +64,7 @@ public class LadderMove : MonoBehaviour
         {
             Debug.Log("On!!");
 
-            isLadder = true;
+            //isLadder = true;
 
         }
     }
@@ -87,6 +83,7 @@ public class LadderMove : MonoBehaviour
         if (collision.gameObject.tag == "Ladder")
         {
             Debug.Log("still touching");
+            isLadder = true;
 
         }
 

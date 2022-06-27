@@ -9,6 +9,10 @@ public class Player : MonoBehaviour
     public bool isJumping = false;
     private bool knockBack = false;
     public bool isGround;
+    public AudioClip audioJump;
+    public AudioClip audioCoin;
+    public GameManager gameManager;
+
     [SerializeField]
     Transform pos;
 
@@ -23,7 +27,8 @@ public class Player : MonoBehaviour
     SpriteRenderer spriteRenderer;
     KeyBoardManager keyBoardManager;
     CapsuleCollider2D capsuleColider;
-   
+    AudioSource audioSource;
+
 
 
     void Awake()
@@ -33,13 +38,12 @@ public class Player : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         keyBoardManager = GetComponent<KeyBoardManager>();
         capsuleColider = GetComponent<CapsuleCollider2D>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
     {
-        if(DataManager.GetInstance().playerisDie){
-            OnDie();
-        } else {
+        if(!DataManager.GetInstance().playerisDie){
             if(DataManager.GetInstance().isStart && !DataManager.GetInstance().isPause){
                 if(!knockBack){
                     PlayerJump();
@@ -52,17 +56,35 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(DataManager.GetInstance().isStart && !DataManager.GetInstance().isPause){
+        if(DataManager.GetInstance().isStart && !DataManager.GetInstance().isPause && !DataManager.GetInstance().playerisDie){
             if(!knockBack){
                 Move();
             }
         }
     }
+    private void SoundPlay(string action){
+        switch(action){
+            case "JUMP":
+            audioSource.clip = audioJump;
+            break;
+            case "COIN":
+            audioSource.clip = audioCoin;
+            break;
+        }
+        audioSource.Play();
+
+    }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "Enemy"){
-            OnDamaged(collision.transform.position);
+        if(!DataManager.GetInstance().playerisDie){
+            if(collision.gameObject.tag == "Enemy"){
+                OnDamaged(collision.transform.position, "Enemy");
+            } else if(collision.gameObject.tag == "Spike"){
+                OnDamaged(collision.transform.position, "Spike");
+            }
+        } else {
+            OnDie();
         }
     }
     void OnTriggerEnter2D(Collider2D collision)
@@ -71,37 +93,35 @@ public class Player : MonoBehaviour
         if(collision.gameObject.tag == "Item"){
             DataManager.GetInstance().stagePoint += 1;
             collision.gameObject.SetActive(false);
+            SoundPlay("COIN");
+        }
+        if(collision.gameObject.tag == "Finish"){
+            gameManager.NextStage();
         }
     }
 
     void PlayerJump(){
-        // 점프
-        isGround = Physics2D.OverlapCircle(pos.position, checkRadius,islayer);
-        if((Input.GetButtonDown("Jump") || keyBoardManager.b_value == 1) && !animator.GetBool("IsJump")){
-            Debug.Log("JJJJJ");
+        // 점프       
+        if ((Input.GetButtonDown("Jump") || keyBoardManager.b_value == 1) && !animator.GetBool("IsJump"))
+        {
             rigid.velocity = Vector2.up * jumpPower;
-            //rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+            rigid.gravityScale = 2f;
             animator.SetBool("IsJump", true);
             animator.SetBool("IsFall", true);
-            isJumping = true;
-
+            SoundPlay("JUMP");
         }
-        if(isGround){
-            animator.SetBool("IsJump",false);
-            animator.SetBool("IsFall",false);
-            isJumping = false;
+        if (rigid.velocity.y < -1.0f)
+        {
+            RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, Vector3.down, 1, LayerMask.GetMask("Platform"));
+            if (rayHit.collider != null)
+            {
+                if (rayHit.distance < 0.7f )
+                {
+                    animator.SetBool("IsJump", false);
+                    animator.SetBool("IsFall", false);
+                }
+            }
         }
-        // if(isGround){
-        //     RaycastHit2D rayhit = Physics2D.Raycast(rigid.position, Vector3.down, 1, LayerMask.GetMask("Platform"));
-        //     Debug.DrawRay(rigid.position, Vector3.down * 1, Color.red);
-        //     if(rayhit.collider !=null){
-        //         if(rayhit.distance < 0.7f){
-        //             animator.SetBool("IsJump",false);
-        //             animator.SetBool("IsFall",false);
-        //             isJumping = false;
-        //         }
-        //     }
-        // }
     }
 
     void PlayerRunAnimation(){
@@ -132,7 +152,7 @@ public class Player : MonoBehaviour
         rigid.velocity = new Vector2(maxSpeed * h, rigid.velocity.y);
     }
 
-    void OnDamaged(Vector2 targetPos)
+    void OnDamaged(Vector2 targetPos, string target)
     {
         knockBack = true; // 넉백 당함
         isJumping = true; // 점프로 인식
@@ -143,8 +163,13 @@ public class Player : MonoBehaviour
             spriteRenderer.color = new Color(1, 1, 1, 0.4f);
         }
         // Reaction Force
-        int dirc = transform.position.x - targetPos.x > 0 ? 1 : -1;
-        rigid.AddForce(new Vector2(dirc, 1) * 3 , ForceMode2D.Impulse);
+        if(target == "Enemy"){
+            int Dirc = transform.position.x - targetPos.x > 0 ? 1 : -1;
+            rigid.AddForce(new Vector2(Dirc, 1) * 5 , ForceMode2D.Impulse);
+        } else if(target == "Spike"){
+            int Dirc = transform.rotation.y == 0 ? -1 : 1;
+            rigid.AddForce(new Vector2(Dirc, 1) * 3 , ForceMode2D.Impulse);
+        }
 
         // 넉백 딜레이
         Invoke("SetKnockBack",0.5f);
@@ -162,8 +187,16 @@ public class Player : MonoBehaviour
         spriteRenderer.color = new Color(1, 1, 1, 1);
 
     }
-    void OnDie(){
+    public void OnDie(){
         animator.SetTrigger("IsDie");
         gameObject.layer = 12; // PlayerDie
+        Invoke("DeActive",0.5f);
+    }
+    void DeActive(){
+        gameObject.SetActive(false);
+    }
+    public void VelocityZero()
+    {
+        rigid.velocity = Vector2.zero;
     }
 }

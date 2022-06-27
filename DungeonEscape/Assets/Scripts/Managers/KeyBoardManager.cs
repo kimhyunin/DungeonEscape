@@ -9,6 +9,7 @@ public class KeyBoardManager : MonoBehaviour
     public GameObject pauseUI;
     public GameObject mainUI;
     public GameObject quitMessageUI;
+    public GameObject black;
     private bool menuOn = false;
     private bool pauseOn = false;
 
@@ -141,16 +142,19 @@ public class KeyBoardManager : MonoBehaviour
     }
 
     public void OnClickStart(){
-        if(DataManager.GetInstance().isStart){ // 게임 시작이 되지 않았을 경우 일시정지
+        if(DataManager.GetInstance().isStart && !DataManager.GetInstance().playerisDie){ // 게임 시작이 되지 않았을 경우 일시정지
             if(!menuOn){
                 Time.timeScale = !DataManager.GetInstance().isPause ? 0: 1;
                 pauseUI.SetActive(!DataManager.GetInstance().isPause);
                 DataManager.GetInstance().isPause = !DataManager.GetInstance().isPause;
                 pauseOn = !pauseOn;
             }
-        } else { // 게임스타트
+        } else if(!DataManager.GetInstance().isStart && !DataManager.GetInstance().playerisDie) { // 게임스타트
+            black.SetActive(true);
             mainUI.SetActive(false);
             DataManager.GetInstance().isStart = true;
+        } else if(DataManager.GetInstance().isStart && DataManager.GetInstance().playerisDie){
+            SceneManager.LoadScene(0);
         }
     }
 
@@ -158,7 +162,5 @@ public class KeyBoardManager : MonoBehaviour
         Time.timeScale = value ? 0 : 1;
         DataManager.GetInstance().isPause = value? true : false;
     }
-    private void OnPause(){
-        pause(true);
-    }
+
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
@@ -22,6 +23,7 @@ public class DataManager : MonoBehaviour
     public int health;
     public Image[] UIhealth;
     public Sprite whiteHealth;
+    public Sprite RedHealth;
     public Player player;
     public GameObject[] stages;
     public TextMeshProUGUI UIPoint;
@@ -42,7 +44,6 @@ public class DataManager : MonoBehaviour
     {
         // 포인트 업데이트
         UIPoint.text = (totalPoint + stagePoint).ToString();
-        Debug.Log(Data.GetInstance().isStart);
     }
 
     public void HealthDown(){

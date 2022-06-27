@@ -1,38 +1,61 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
-using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject continueUI;
-    public Text countText;
+    public GameObject[] stages;
+    public int stageIndex;
     public GameObject gameoverUI;
     public Text startMessage;
-    private float startCount = 9f;
+    public GameObject clearUI;
+    public Text clearText;
+    public AudioClip audioGameOver;
+    AudioSource audioSource;
+    public Player player;
+    private bool gameover = false;
 
     void Start(){
         StartCoroutine(BlinkText());
+        audioSource = GetComponent<AudioSource>();
+        audioSource.Play();
+
     }
     void Update()
     {
         if(DataManager.GetInstance().playerisDie){
-            PlayerDie();
+            if(!gameover){
+                audioSource.clip = audioGameOver;
+                audioSource.Play();
+                GameOver();
+                gameover = true;
+            }
         }
     }
-    public void PlayerDie(){
-        if(startCount > -1){
-            continueUI.SetActive(true);
-            startCount -= Time.deltaTime;
-            countText.text = Mathf.Ceil(startCount).ToString();
+    private void GameOver(){
+        gameoverUI.SetActive(true);
+    }
+    public void ClearStage(){
+        clearUI.SetActive(true);
+    }
+    public void NextStage(){
+        if(stageIndex < stages.Length - 1){
+            stages[stageIndex].SetActive(false);
+            stageIndex++;
+            stages[stageIndex].SetActive(true);
+            playerReposition();
         } else {
-            continueUI.SetActive(false);
-            gameoverUI.SetActive(true);
+            ClearStage();
         }
     }
-    public IEnumerator BlinkText()
+    void playerReposition()
+    {
+        player.transform.position = new Vector3(0.5f, 2.0f, 0);
+        player.VelocityZero();
+        //cameraFollow.SetInitPosition();
+    }
+    private IEnumerator BlinkText()
     {
         while (true)
         {
@@ -40,7 +63,7 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(.5f);
             startMessage.text = "PRESS START!";
             yield return new WaitForSeconds(.5f);
-
         }
     }
+
 }

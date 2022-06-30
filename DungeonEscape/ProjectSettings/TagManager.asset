@@ -9,6 +9,7 @@ TagManager:
   - Item
   - Ladder
   - Spike
+  - Platform
   layers:
   - Default
   - TransparentFX

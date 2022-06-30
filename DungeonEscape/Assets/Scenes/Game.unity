@@ -176,7 +176,6 @@ MonoBehaviour:
   gameoverUI: {fileID: 529457186}
   startMessage: {fileID: 625422829}
   clearUI: {fileID: 1873822157}
-  clearText: {fileID: 554902232}
   audioGameOver: {fileID: 8300000, guid: 3cc99bf9cdf26b74c843093ebaac0559, type: 3}
   player: {fileID: 1217189165}
 --- !u!114 &11400180
@@ -193,16 +192,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   totalPoint: 0
   stagePoint: 0
-  stageIndex: 0
   health: 3
   UIhealth:
   - {fileID: 1830346951}
   - {fileID: 821560315}
   - {fileID: 262840516}
   whiteHealth: {fileID: 21300000, guid: 66e0c2e9337acba4790d5f3e71f9820f, type: 3}
-  RedHealth: {fileID: 21300000, guid: 4b2f3fd3f432ad148a82601664db75b7, type: 3}
-  player: {fileID: 1217189165}
-  stages: []
   UIPoint: {fileID: 1485507059}
 --- !u!114 &11400181
 MonoBehaviour:
@@ -324,11 +319,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f3a78b7b6535f24697aca1b4cf50a49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioMain: {fileID: 8300000, guid: 06e39a64e23dc5a449865904dc489b20, type: 3}
-  audioJump: {fileID: 8300000, guid: 2c5292ba5cf254919a6b9e2b18e04f49, type: 3}
-  audioCoin: {fileID: 8300000, guid: 79180f511d89441b9aa23ccae1992fe0, type: 3}
-  audioGameOver: {fileID: 8300000, guid: 3cc99bf9cdf26b74c843093ebaac0559, type: 3}
-  audioArrow: {fileID: 8300000, guid: 3becec1909f194046945d85ac1077772, type: 3}
 --- !u!1 &14059316 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1042197809094507869, guid: 674f367d67a9d0449a447285cbee719d,
@@ -2608,7 +2598,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 200}
+  m_AnchoredPosition: {x: 0, y: 225}
   m_SizeDelta: {x: 100, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &357288271
@@ -11125,7 +11115,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 120, y: 0}
-  m_SizeDelta: {x: 100, y: 80}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &512491767
 MonoBehaviour:
@@ -11697,7 +11687,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 34.879997, y: -1, z: -10}
+  m_LocalPosition: {x: 0.5, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -17076,7 +17066,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -200}
+  m_AnchoredPosition: {x: 0, y: -225}
   m_SizeDelta: {x: 100, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &977843133
@@ -17344,33 +17334,15 @@ Tilemap:
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
       m_AllTileFlags: 1073741825
-  - first: {x: 13, y: -1, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 0
-      m_TileObjectToInstantiateIndex: 65535
-      m_AllTileFlags: 1073741825
-  - first: {x: 14, y: -1, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 0
-      m_TileObjectToInstantiateIndex: 65535
-      m_AllTileFlags: 1073741825
   m_AnimatedTiles: {}
   m_TileAssetArray:
-  - m_RefCount: 6
+  - m_RefCount: 4
     m_Data: {fileID: 11400000, guid: 68d36d9382dc23b4e9bd1ed1bbd5e1b7, type: 2}
   m_TileSpriteArray:
-  - m_RefCount: 6
+  - m_RefCount: 4
     m_Data: {fileID: 21300000, guid: b27ddb492e593da47bee1297fac3be66, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 6
+  - m_RefCount: 4
     m_Data:
       e00: 1
       e01: 0
@@ -17389,7 +17361,7 @@ Tilemap:
       e32: 0
       e33: 1
   m_TileColorArray:
-  - m_RefCount: 6
+  - m_RefCount: 4
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
@@ -18578,6 +18550,9 @@ MonoBehaviour:
   ladderMask:
     serializedVersion: 2
     m_Bits: 512
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 256
   vertical: 0
   climbing: 0
   checkRadius: 0.3
@@ -22456,7 +22431,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -120, y: 0}
-  m_SizeDelta: {x: 100, y: 80}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1714038307
 MonoBehaviour:
@@ -33540,7 +33515,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1813227279}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 34.88, y: -2.17, z: -10}
+  m_LocalPosition: {x: 0.5, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1603238559}
@@ -33764,7 +33739,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 100, y: 0}
+  m_AnchoredPosition: {x: 125, y: 0}
   m_SizeDelta: {x: 100, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1845879468
@@ -43114,7 +43089,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -350, y: 0}
+  m_AnchoredPosition: {x: -350, y: -91}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1958288753
@@ -43279,7 +43254,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -100, y: 0}
+  m_AnchoredPosition: {x: -125, y: 0}
   m_SizeDelta: {x: 100, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2008215661
@@ -43730,7 +43705,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -240, y: 1200}
+  m_AnchoredPosition: {x: -240, y: 1109}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2060292225
@@ -44361,12 +44336,12 @@ PrefabInstance:
     - target: {fileID: 8832352284746085565, guid: c73f93397f256c945bc418d929a41e5b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 34.88
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8832352284746085565, guid: c73f93397f256c945bc418d929a41e5b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.17
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8832352284746085565, guid: c73f93397f256c945bc418d929a41e5b,
         type: 3}

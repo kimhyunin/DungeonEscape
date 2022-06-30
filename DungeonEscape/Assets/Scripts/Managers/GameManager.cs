@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     public GameObject gameoverUI;
     public Text startMessage;
     public GameObject clearUI;
-    public Text clearText;
     public AudioClip audioGameOver;
     AudioSource audioSource;
     public Player player;
@@ -20,12 +19,12 @@ public class GameManager : MonoBehaviour
         StartCoroutine(BlinkText());
         audioSource = GetComponent<AudioSource>();
         audioSource.Play();
-
     }
     void Update()
     {
         if(DataManager.GetInstance().playerisDie){
             if(!gameover){
+                // GameOver시 사운드 변경
                 audioSource.clip = audioGameOver;
                 audioSource.Play();
                 GameOver();
@@ -34,26 +33,30 @@ public class GameManager : MonoBehaviour
         }
     }
     private void GameOver(){
+        // GameOver UI 노출
         gameoverUI.SetActive(true);
     }
     public void ClearStage(){
+        // 클리어 UI 노출
         clearUI.SetActive(true);
     }
     public void NextStage(){
+        // 다음 스테이지가 남아있을경우 이동
         if(stageIndex < stages.Length - 1){
-            stages[stageIndex].SetActive(false);
+            stages[stageIndex].SetActive(false); // 현재 스테이지
             stageIndex++;
-            stages[stageIndex].SetActive(true);
+            stages[stageIndex].SetActive(true); // 다음 스테이지
             playerReposition();
         } else {
+            // 다음 스테이지가 없으면 GameClear
             ClearStage();
         }
     }
     void playerReposition()
     {
-        player.transform.position = new Vector3(0.5f, 2.0f, 0);
+        // 플레이어 시작 위치 이동
+        player.transform.position = new Vector3(0.5f, 0.0f, -10f);
         player.VelocityZero();
-        //cameraFollow.SetInitPosition();
     }
     private IEnumerator BlinkText()
     {
@@ -65,5 +68,4 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(.5f);
         }
     }
-
 }

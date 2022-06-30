@@ -76,7 +76,6 @@ GameObject:
   - component: {fileID: 8832352284746085567}
   - component: {fileID: 8832352284746085536}
   - component: {fileID: 8832352284746085537}
-  - component: {fileID: 7725649821232526198}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -220,7 +219,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 5
   jumpPower: 7
-  isJumping: 0
+  audioJump: {fileID: 0}
+  audioCoin: {fileID: 0}
+  gameManager: {fileID: 0}
+  pos: {fileID: 0}
+  checkRadius: 0
+  islayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &8832352284746085536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,6 +241,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrow: {fileID: 4976287444131305645, guid: 9005ddd68fe88a245ae5b0147f545305, type: 3}
   pos: {fileID: 8832352283295414437}
+  audioArrow: {fileID: 0}
 --- !u!114 &8832352284746085537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,17 +257,4 @@ MonoBehaviour:
   pauseUI: {fileID: 0}
   mainUI: {fileID: 0}
   quitMessageUI: {fileID: 0}
---- !u!114 &7725649821232526198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8832352284746085561}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c917235faeba7543b6a83058c1af3cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isLadder: 0
-  isClimbing: 0
+  black: {fileID: 0}

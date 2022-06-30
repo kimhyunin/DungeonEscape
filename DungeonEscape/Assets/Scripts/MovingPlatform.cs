@@ -4,41 +4,47 @@ using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour
 {
-    public Transform startPos;
-    public Transform endPos;
+    public Transform startPos; // 시작 위치
+    public Transform endPos; // 끝 지점
     public Transform desPos;
     public float speed;
-    // Start is called before the first frame update
+
     void Start()
     {
         transform.position = startPos.position;
-        desPos =endPos;
+        desPos = endPos;
 
+    }
+    void FixedUpdate()
+    {
+        Move();
+    }
+    void Move(){
+        // 발판 이동
+        transform.position=Vector2.MoveTowards(transform.position,desPos.position,Time.deltaTime * speed);
+        // 현재 발판의 위치와 목표지점의 위치 사이값 <= 0.05
+        Debug.Log(Vector2.Distance(transform.position,desPos.position));
+        if(Vector2.Distance(transform.position,desPos.position) <= 0.05f){
+            if(desPos == endPos){
+                // 목표 지점 바꿔주기
+                desPos = startPos;
+            } else {
+                desPos = endPos;
+            }
+        }
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
+        // 발판과 플레이어가 만났을 경우 자식 관계
         if(collision.transform.CompareTag("Player")){
             collision.transform.SetParent(transform);
         }
     }
     void OnCollisionExit2D(Collision2D collision)
     {
+        // 발판과 플레이어가 떨어졌을 경우 자식 관계 해제
         if(collision.transform.CompareTag("Player")){
             collision.transform.SetParent(null);
         }
-    }
-
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        transform.position=Vector2.MoveTowards(transform.position,desPos.position,Time.deltaTime * speed);
-        if(Vector2.Distance(transform.position,desPos.position) <= 0.05f){
-            if(desPos == endPos){
-                desPos = startPos;
-            } else {
-                desPos = endPos;
-            }
-        }
-
     }
 }

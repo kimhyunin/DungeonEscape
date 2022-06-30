@@ -20,7 +20,7 @@ public class FadeEffect : MonoBehaviour
 
             if (color.a > 0)
             {
-                color.a -= Time.deltaTime;
+                color.a -= Time.deltaTime; // FadeOut
             }
             image.color = color;
         }

@@ -17,27 +17,18 @@ public class DataManager : MonoBehaviour
         return instance;
     }
 
-    public int totalPoint;
-    public int stagePoint;
-    public int stageIndex;
-    public int health;
-    public Image[] UIhealth;
-    public Sprite whiteHealth;
-    public Sprite RedHealth;
-    public Player player;
-    public GameObject[] stages;
-    public TextMeshProUGUI UIPoint;
-    public bool playerisDie {get; set;}
-    public bool isPause {get; set;}
-    public bool isStart {get; set;}
+    public int totalPoint; // 전체점수
+    public int stagePoint; // 스테이지 점수
+    public int health; // 체력
+    public Image[] UIhealth; // 체력 이미지 배열
+    public Sprite whiteHealth; // 체력 흰색 이미지
+    public TextMeshProUGUI UIPoint; // 포인트 Text
+    public bool playerisDie {get; set;} // 플레이어 사망 여부
+    public bool isPause {get; set;} // 일시정지 여부
+    public bool isStart {get; set;} // 게임시작 여부
 
     public void Awake(){
         instance = this;
-    }
-
-    void Start()
-    {
-        playerisDie = false;
     }
 
     void Update()

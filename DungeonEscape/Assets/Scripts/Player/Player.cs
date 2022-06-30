@@ -6,9 +6,7 @@ public class Player : MonoBehaviour
 {
     public float maxSpeed;
     public float jumpPower;
-    public bool isJumping = false;
     private bool knockBack = false;
-    public bool isGround;
     public AudioClip audioJump;
     public AudioClip audioCoin;
     public GameManager gameManager;
@@ -56,7 +54,8 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(DataManager.GetInstance().isStart && !DataManager.GetInstance().isPause && !DataManager.GetInstance().playerisDie){
+        if(DataManager.GetInstance().isStart && !DataManager.GetInstance().isPause
+            && !DataManager.GetInstance().playerisDie){
             if(!knockBack){
                 Move();
             }
@@ -101,23 +100,24 @@ public class Player : MonoBehaviour
     }
 
     void PlayerJump(){
-        // 점프       
+        // 점프
         if ((Input.GetButtonDown("Jump") || keyBoardManager.b_value == 1) && !animator.GetBool("IsJump"))
         {
             rigid.velocity = Vector2.up * jumpPower;
-            rigid.gravityScale = 2f;
-            animator.SetBool("IsJump", true);
+            rigid.gravityScale = 2f; // 중력 초기화
+            animator.SetBool("IsJump", true); // 점프 애니메이션
             animator.SetBool("IsFall", true);
-            SoundPlay("JUMP");
+            SoundPlay("JUMP"); // 점프 사운드
         }
         if (rigid.velocity.y < -1.0f)
         {
-            RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, Vector3.down, 1, LayerMask.GetMask("Platform"));
+            // 바닥면 체크
+            RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, Vector3.down, 1, LayerMask.GetMask("Platform")); 
             if (rayHit.collider != null)
             {
                 if (rayHit.distance < 0.7f )
                 {
-                    animator.SetBool("IsJump", false);
+                    animator.SetBool("IsJump", false); //IDLE 상태
                     animator.SetBool("IsFall", false);
                 }
             }
@@ -126,23 +126,19 @@ public class Player : MonoBehaviour
 
     void PlayerRunAnimation(){
         // 애니메이션
-        if(Mathf.Abs(rigid.velocity.x) < 0.3f)
-            animator.SetBool("IsRun", false);
-        else
-            animator.SetBool("IsRun",true);
+        animator.SetBool("IsRun", Mathf.Abs(rigid.velocity.x) < 0.3f ? false : true);
     }
 
     void PlayerFlipX(){
         // 플레이어 스프라이트 반전
         float hor = Input.GetAxisRaw("Horizontal") + keyBoardManager.right_value + keyBoardManager.left_value;
-        transform.Translate(new Vector3(Mathf.Abs(hor)*Time.deltaTime,0,0));
         if (hor > 0)
         {
-            transform.eulerAngles = new Vector3(0, 0, 0);
+            transform.eulerAngles = new Vector3(0, 0, 0); // 오른쪽 이동
         }
         else if (hor < 0)
         {
-            transform.eulerAngles = new Vector3(0, 180, 0);
+            transform.eulerAngles = new Vector3(0, 180, 0); // 왼쪽
         }
     }
 
@@ -155,18 +151,19 @@ public class Player : MonoBehaviour
     void OnDamaged(Vector2 targetPos, string target)
     {
         knockBack = true; // 넉백 당함
-        isJumping = true; // 점프로 인식
         gameObject.layer = 11; // PlayerDamaged
         // Health Down
         DataManager.GetInstance().HealthDown();
         if(!DataManager.GetInstance().playerisDie){
-            spriteRenderer.color = new Color(1, 1, 1, 0.4f);
+            spriteRenderer.color = new Color(1, 1, 1, 0.4f); // 데미지 효과
         }
         // Reaction Force
-        if(target == "Enemy"){
+        if(target == "Enemy"){ // 몬스터를 만났을 경우
+        // 플레이어 위치 - 몬스터 위치 > 0
             int Dirc = transform.position.x - targetPos.x > 0 ? 1 : -1;
-            rigid.AddForce(new Vector2(Dirc, 1) * 5 , ForceMode2D.Impulse);
+            rigid.AddForce(new Vector2(Dirc, 1) * 3 , ForceMode2D.Impulse);
         } else if(target == "Spike"){
+            // 바라보는 방향 반대
             int Dirc = transform.rotation.y == 0 ? -1 : 1;
             rigid.AddForce(new Vector2(Dirc, 1) * 3 , ForceMode2D.Impulse);
         }
@@ -185,7 +182,6 @@ public class Player : MonoBehaviour
     {
         gameObject.layer = 10; // Player
         spriteRenderer.color = new Color(1, 1, 1, 1);
-
     }
     public void OnDie(){
         animator.SetTrigger("IsDie");

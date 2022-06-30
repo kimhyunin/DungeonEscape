@@ -10,7 +10,6 @@ public class FadeInEffect : MonoBehaviour
    private Image image;
    public Text endingCredit;
    private string text = "CLEAR!!\r\n\r\nDEVELOPER BY KIM HYUN IN\r\n\r\nTHANK YOU";
-    // Start is called before the first frame update
     void Awake()
     {
         image = GetComponent<Image>();
@@ -28,7 +27,7 @@ public class FadeInEffect : MonoBehaviour
 
             if (color.a >= 0)
             {
-                color.a += Time.deltaTime;
+                color.a += Time.deltaTime; // FadeIn 효과
             }
             image.color = color;
         }
@@ -39,7 +38,7 @@ public class FadeInEffect : MonoBehaviour
     IEnumerator typing(){
         yield return new WaitForSeconds(2f);
         for(int i = 0; i<=text.Length; i++){
-            endingCredit.text = text.Substring(0,i);
+            endingCredit.text = text.Substring(0,i); // 한글자 씩 노출
             yield return new WaitForSeconds(0.15f);
         }
         yield return new WaitForSeconds(10f);
